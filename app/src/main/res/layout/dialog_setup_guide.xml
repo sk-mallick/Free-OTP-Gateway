@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/space_24"
+        android:paddingTop="@dimen/space_12"
+        android:paddingBottom="@dimen/space_16">
+
+        <!-- Section 1: Android Device Address -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Android Device Address"
+            android:textAppearance="@style/TextAppearance.App.CardHeading" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_8"
+            android:layout_marginBottom="@dimen/space_16"
+            android:background="@drawable/bg_endpoint_box"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/space_12"
+            android:paddingEnd="@dimen/space_4"
+            android:paddingVertical="@dimen/space_4">
+
+            <TextView
+                android:id="@+id/guideDeviceAddressText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="monospace"
+                android:textColor="@color/accent_info"
+                android:textIsSelectable="true"
+                android:textSize="13sp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCopyDeviceAddress"
+                style="@style/Widget.App.IconButton"
+                android:layout_width="@dimen/touch_target_min"
+                android:layout_height="@dimen/touch_target_min"
+                android:contentDescription="Copy Android device address"
+                app:icon="@drawable/ic_copy"
+                app:iconTint="@color/accent_link" />
+
+        </LinearLayout>
+
+        <!-- Section 2: Cloudflare Tunnel -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Option 1: Cloudflare Tunnel (Recommended)"
+            android:textAppearance="@style/TextAppearance.App.CardHeading" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_4"
+            android:text="1. Install cloudflared on a computer connected to the same Wi-Fi.\n2. Run the command below to expose this device over HTTPS:"
+            android:textAppearance="@style/TextAppearance.App.BodySecondary" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_8"
+            android:layout_marginBottom="@dimen/space_16"
+            android:background="@drawable/bg_code_box"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <HorizontalScrollView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:scrollbars="horizontal">
+
+                <TextView
+                    android:id="@+id/guideCloudflareCmdText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/space_12"
+                    android:textAppearance="@style/TextAppearance.App.Code" />
+
+            </HorizontalScrollView>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCopyCloudflareCmd"
+                style="@style/Widget.App.IconButton"
+                android:layout_width="@dimen/touch_target_min"
+                android:layout_height="@dimen/touch_target_min"
+                android:contentDescription="Copy Cloudflare command"
+                app:icon="@drawable/ic_copy"
+                app:iconTint="@color/accent_link" />
+
+        </LinearLayout>
+
+        <!-- Section 3: VPS + Nginx -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Option 2: VPS + Nginx Reverse Proxy"
+            android:textAppearance="@style/TextAppearance.App.CardHeading" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_4"
+            android:text="1. Point your domain DNS (e.g. sms.yourdomain.com) to your VPS.\n2. Forward incoming HTTPS traffic to this device via VPN or port forwarding:"
+            android:textAppearance="@style/TextAppearance.App.BodySecondary" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_8"
+            android:layout_marginBottom="@dimen/space_16"
+            android:background="@drawable/bg_code_box"
+            android:scrollbars="horizontal">
+
+            <TextView
+                android:id="@+id/guideNginxConfigText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/space_12"
+                android:textAppearance="@style/TextAppearance.App.Code" />
+
+        </HorizontalScrollView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCloseGuide"
+            style="@style/Widget.App.Button.Secondary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Close" />
+
+    </LinearLayout>
+
+</ScrollView>

@@ -1,61 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingHorizontal="24dp"
-    android:paddingTop="8dp"
-    android:paddingBottom="12dp">
+    android:fillViewport="true">
 
-    <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/enableExternalDomainSwitch"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Enable Custom Domain Routing"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        android:textColor="?attr/colorOnSurface"
-        android:layout_marginBottom="14dp" />
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/space_24"
+        android:paddingTop="@dimen/space_12"
+        android:paddingBottom="@dimen/space_16">
 
-    <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="14dp"
-        app:boxCornerRadiusTopStart="12dp"
-        app:boxCornerRadiusTopEnd="12dp"
-        app:boxCornerRadiusBottomStart="12dp"
-        app:boxCornerRadiusBottomEnd="12dp"
-        android:hint="Domain (e.g. sms.yourdomain.com)">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/domainEditText"
+        <!-- Custom Domain Toggle Row -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textUri"
-            android:maxLines="1" />
+            android:layout_marginBottom="@dimen/space_12"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_12"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/instructionsText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Instructions will appear here..."
-        android:textSize="12sp"
-        android:lineSpacingExtra="2dp"
-        android:textColor="?attr/colorOnSurfaceVariant"
-        android:padding="12dp"
-        android:background="@drawable/bg_status_badge"
-        android:backgroundTint="?attr/colorSurfaceVariant"
-        android:layout_marginBottom="12dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Custom Domain Routing"
+                    android:textAppearance="@style/TextAppearance.App.CardHeading" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="💡 Set up a Cloudflare Tunnel or Nginx reverse proxy to securely forward external web traffic to this device."
-        android:textSize="12sp"
-        android:textColor="?attr/colorOnSurfaceVariant" />
+                <TextView
+                    android:id="@+id/domainToggleStateText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="Disabled (using local IP)"
+                    android:textAppearance="@style/TextAppearance.App.Helper" />
 
-</LinearLayout>
+            </LinearLayout>
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/enableExternalDomainSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="@dimen/touch_target_min"
+                android:minHeight="@dimen/touch_target_min"
+                android:contentDescription="Enable custom domain routing"
+                app:thumbTint="@color/switch_thumb_tint"
+                app:trackTint="@color/switch_track_tint" />
+
+        </LinearLayout>
+
+        <!-- Domain Input Field -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/domainInputLayout"
+            style="@style/Widget.App.TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/space_12"
+            android:hint="External Domain"
+            app:errorEnabled="true"
+            app:placeholderText="sms.yourdomain.com">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/domainEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/input_min_height"
+                android:inputType="textUri"
+                android:maxLines="1"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Numbered Setup Summary Box -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/space_16"
+            android:background="@drawable/bg_info_box"
+            android:orientation="vertical"
+            android:padding="@dimen/space_12">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/space_8"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:contentDescription="Setup steps"
+                    android:src="@drawable/ic_info"
+                    app:tint="@color/accent_info" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/space_8"
+                    android:text="Quick Setup Steps"
+                    android:textAppearance="@style/TextAppearance.App.StatusLabel"
+                    android:textColor="@color/text_primary" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/instructionsText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.App.BodySecondary" />
+
+        </LinearLayout>
+
+        <!-- Primary Action: Save -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSaveDomain"
+            style="@style/Widget.App.Button.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save" />
+
+        <!-- Secondary & Tertiary Actions -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_8"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnViewSetupGuide"
+                style="@style/Widget.App.Button.Tertiary"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_4"
+                android:layout_weight="1"
+                android:text="Setup Guide" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCancelDomain"
+                style="@style/Widget.App.Button.Secondary"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_4"
+                android:layout_weight="1"
+                android:text="Cancel" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

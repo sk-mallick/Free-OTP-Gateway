@@ -1,48 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingHorizontal="24dp"
-    android:paddingTop="8dp"
-    android:paddingBottom="12dp">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Include this secret key in the X-API-Key request header to authenticate REST API calls:"
-        android:textSize="13sp"
-        android:lineSpacingExtra="2dp"
-        android:textColor="?attr/colorOnSurfaceVariant"
-        android:layout_marginBottom="14dp" />
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_status_badge"
-        android:backgroundTint="?attr/colorSurfaceVariant"
-        android:padding="14dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/space_24"
+        android:paddingTop="@dimen/space_12"
+        android:paddingBottom="@dimen/space_16">
 
         <TextView
-            android:id="@+id/dialogApiKeyDisplay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="monospace"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:textColor="?attr/colorPrimary"
-            android:textIsSelectable="true" />
+            android:layout_marginBottom="@dimen/space_12"
+            android:text="Include this secret key in the X-API-Key header to authenticate REST API requests."
+            android:textAppearance="@style/TextAppearance.App.BodySecondary" />
+
+        <!-- Monospace Selectable Key Box (wraps cleanly without clipping) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_endpoint_box"
+            android:orientation="vertical"
+            android:padding="@dimen/space_12">
+
+            <TextView
+                android:id="@+id/dialogApiKeyDisplay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:textColor="@color/accent_auth"
+                android:textIsSelectable="true"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- Security Info Note -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_12"
+            android:layout_marginBottom="@dimen/space_16"
+            android:background="@drawable/bg_info_box"
+            android:gravity="top"
+            android:orientation="horizontal"
+            android:padding="@dimen/space_12">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginTop="2dp"
+                android:contentDescription="Security notice"
+                android:src="@drawable/ic_info"
+                app:tint="@color/accent_info" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_8"
+                android:layout_weight="1"
+                android:text="Keep this key private. Generating a new key will immediately invalidate the current key for all connected clients."
+                android:textAppearance="@style/TextAppearance.App.BodySecondary" />
+
+        </LinearLayout>
+
+        <!-- Primary Action: Copy Key -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnDialogCopyKey"
+            style="@style/Widget.App.Button.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Copy Key"
+            app:icon="@drawable/ic_copy"
+            app:iconGravity="textStart" />
+
+        <!-- Secondary & Destructive Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_8"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDialogRegenerateKey"
+                style="@style/Widget.App.Button.Destructive"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_4"
+                android:layout_weight="1"
+                android:text="Generate New" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDialogKeyDone"
+                style="@style/Widget.App.Button.Secondary"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_4"
+                android:layout_weight="1"
+                android:text="Done" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="💡 Keep this key private. You can generate a new key at any time."
-        android:textSize="12sp"
-        android:textColor="?attr/colorOutline" />
-
-</LinearLayout>
+</ScrollView>

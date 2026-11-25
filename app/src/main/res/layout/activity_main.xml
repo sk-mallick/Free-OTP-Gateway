@@ -5,129 +5,189 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/android:colorBackground"
+    android:background="@color/bg_app"
     tools:context=".MainActivity">
 
-    <!-- Top App Bar -->
+    <!-- Compact Top App Bar -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorSurface"
-        app:elevation="0dp">
+        android:background="@color/bg_header"
+        app:elevation="0dp"
+        app:liftOnScroll="false">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/topAppBar"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:title="Free OTP Gateway"
-            app:titleTextAppearance="@style/TextAppearance.Material3.TitleLarge"
-            app:titleTextColor="?attr/colorOnSurface"
-            app:subtitle="REST SMS Server · Port 8080"
-            app:subtitleTextColor="?attr/colorOnSurfaceVariant" />
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/app_bar_height"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/space_16"
+            android:paddingVertical="@dimen/space_8">
+
+            <TextView
+                android:id="@+id/appTitleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textAppearance="@style/TextAppearance.App.Title" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <View
+                    android:id="@+id/headerStatusDot"
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:background="@drawable/bg_status_dot"
+                    android:backgroundTint="@color/accent_success" />
+
+                <TextView
+                    android:id="@+id/headerSubtitleText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="Online · Port 8080"
+                    android:textAppearance="@style/TextAppearance.App.BodySecondary" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?attr/colorOutlineVariant" />
+            android:background="@color/divider_subtle" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Scrollable Main Container for all screen sizes -->
+    <!-- Scrollable Main Content -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
         android:clipToPadding="false"
-        android:paddingBottom="96dp"
+        android:fillViewport="true"
+        android:paddingBottom="@dimen/fab_bottom_clearance"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="16dp"
-            android:paddingTop="16dp">
+            android:paddingHorizontal="@dimen/space_16"
+            android:paddingTop="@dimen/space_12">
 
-            <!-- 1. Hero Server Status Card -->
+            <!-- 1. Server Management Card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/serverCard"
+                style="@style/Widget.App.Card"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="?attr/colorOutlineVariant"
-                app:cardBackgroundColor="?attr/colorSurface">
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="@dimen/space_16">
 
-                    <!-- Status Indicator & Switch Row -->
+                    <!-- Compact Server Header & Toggle Row -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
-                        <!-- Pulsing/Colored Dot -->
-                        <View
-                            android:id="@+id/statusDot"
-                            android:layout_width="12dp"
-                            android:layout_height="12dp"
-                            android:background="@drawable/bg_status_badge"
-                            android:backgroundTint="@color/status_delivered" />
+                        <ImageView
+                            android:id="@+id/serverIcon"
+                            android:layout_width="@dimen/icon_standard"
+                            android:layout_height="@dimen/icon_standard"
+                            android:contentDescription="Server status icon"
+                            android:src="@drawable/ic_server"
+                            app:tint="@color/accent_success" />
 
-                        <TextView
-                            android:id="@+id/serverStatusText"
+                        <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/space_12"
                             android:layout_weight="1"
-                            android:layout_marginStart="10dp"
-                            android:text="Server Status: Running"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="?attr/colorOnSurface" />
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="HTTP API Server"
+                                android:textAppearance="@style/TextAppearance.App.CardHeading" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <View
+                                    android:id="@+id/statusDot"
+                                    android:layout_width="8dp"
+                                    android:layout_height="8dp"
+                                    android:background="@drawable/bg_status_dot"
+                                    android:backgroundTint="@color/accent_success" />
+
+                                <TextView
+                                    android:id="@+id/serverStatusText"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="6dp"
+                                    android:text="Running"
+                                    android:textAppearance="@style/TextAppearance.App.StatusLabel"
+                                    android:textColor="@color/accent_success" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
 
                         <com.google.android.material.switchmaterial.SwitchMaterial
                             android:id="@+id/serverToggle"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:minWidth="@dimen/touch_target_min"
+                            android:minHeight="@dimen/touch_target_min"
+                            android:contentDescription="Toggle API server"
+                            app:thumbTint="@color/switch_thumb_tint"
+                            app:trackTint="@color/switch_track_tint" />
 
                     </LinearLayout>
 
-                    <!-- Subtle Divider -->
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginVertical="12dp"
-                        android:background="?attr/colorOutlineVariant" />
+                        android:layout_marginVertical="@dimen/space_12"
+                        android:background="@color/divider_subtle" />
 
-                    <!-- Network URL Info -->
+                    <!-- API Endpoint Label -->
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="API ENDPOINT URL"
-                        android:textSize="11sp"
-                        android:textStyle="bold"
-                        android:letterSpacing="0.08"
-                        android:textColor="?attr/colorOnSurfaceVariant" />
+                        android:text="API Endpoint"
+                        android:textAppearance="@style/TextAppearance.App.BodySecondary" />
 
+                    <!-- Endpoint Box -->
                     <LinearLayout
                         android:id="@+id/urlContainerLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
-                        android:background="@drawable/bg_status_badge"
-                        android:backgroundTint="?attr/colorSurfaceVariant"
+                        android:background="@drawable/bg_endpoint_box"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:paddingHorizontal="12dp"
-                        android:paddingVertical="8dp">
+                        android:paddingStart="@dimen/space_12"
+                        android:paddingEnd="@dimen/space_4"
+                        android:paddingVertical="@dimen/space_4">
 
                         <TextView
                             android:id="@+id/baseUrlDisplay"
@@ -135,80 +195,103 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:fontFamily="monospace"
+                            android:paddingVertical="6dp"
+                            android:textColor="@color/accent_info"
                             android:textSize="13sp"
-                            android:textColor="?attr/colorPrimary"
-                            android:textStyle="bold"
+                            android:textIsSelectable="true"
                             tools:text="http://192.168.1.38:8080" />
 
-                        <Button
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/copyUrlButton"
-                            style="@style/Widget.Material3.Button.TextButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="36dp"
-                            android:minHeight="36dp"
-                            android:paddingHorizontal="10dp"
-                            android:text="Copy"
-                            android:textSize="12sp" />
+                            style="@style/Widget.App.IconButton"
+                            android:layout_width="@dimen/touch_target_min"
+                            android:layout_height="@dimen/touch_target_min"
+                            android:contentDescription="Copy API endpoint URL"
+                            app:icon="@drawable/ic_copy"
+                            app:iconTint="@color/accent_link" />
 
                     </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/portText"
-                        android:layout_width="wrap_content"
+                    <!-- Port Row -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:background="?android:attr/selectableItemBackground"
-                        android:paddingVertical="4dp"
-                        android:text="Port: 8080 (tap to change)"
-                        android:textColor="?attr/colorOnSurfaceVariant"
-                        android:textSize="12sp" />
+                        android:layout_marginTop="@dimen/space_4"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:contentDescription="Server port"
+                            android:src="@drawable/ic_settings"
+                            app:tint="@color/text_muted" />
+
+                        <TextView
+                            android:id="@+id/portText"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/space_8"
+                            android:layout_weight="1"
+                            android:text="Port: 8080"
+                            android:textAppearance="@style/TextAppearance.App.BodySecondary" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/changePortButton"
+                            style="@style/Widget.App.Button.Tertiary"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="@dimen/space_8"
+                            android:text="Change Port" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- 2. API Credentials & Endpoints Card -->
+            <!-- 2. API Authentication & Code Preview Card -->
             <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.App.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="?attr/colorOutlineVariant"
-                app:cardBackgroundColor="?attr/colorSurface">
+                android:layout_marginTop="@dimen/space_12">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="@dimen/space_16">
 
+                    <!-- Section Header Row -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
+                        <ImageView
+                            android:layout_width="@dimen/icon_standard"
+                            android:layout_height="@dimen/icon_standard"
+                            android:contentDescription="API authentication icon"
+                            android:src="@drawable/ic_shield_key"
+                            app:tint="@color/accent_auth" />
+
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/space_8"
                             android:layout_weight="1"
-                            android:text="API AUTHENTICATION"
-                            android:textSize="11sp"
-                            android:textStyle="bold"
-                            android:letterSpacing="0.08"
-                            android:textColor="?attr/colorOnSurfaceVariant" />
+                            android:text="API Authentication"
+                            android:textAppearance="@style/TextAppearance.App.CardHeading" />
 
-                        <Button
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/regenerateKeyButton"
-                            style="@style/Widget.Material3.Button.TextButton"
+                            style="@style/Widget.App.Button.Tertiary"
                             android:layout_width="wrap_content"
-                            android:layout_height="36dp"
-                            android:minHeight="36dp"
-                            android:paddingHorizontal="8dp"
-                            android:text="New Key"
-                            android:textSize="12sp" />
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="@dimen/space_8"
+                            android:text="New Key" />
 
                     </LinearLayout>
 
@@ -217,13 +300,13 @@
                         android:id="@+id/apiKeyContainerLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:background="@drawable/bg_status_badge"
-                        android:backgroundTint="?attr/colorSurfaceVariant"
+                        android:layout_marginTop="@dimen/space_4"
+                        android:background="@drawable/bg_endpoint_box"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:paddingHorizontal="12dp"
-                        android:paddingVertical="8dp">
+                        android:paddingStart="@dimen/space_12"
+                        android:paddingEnd="@dimen/space_4"
+                        android:paddingVertical="@dimen/space_4">
 
                         <TextView
                             android:id="@+id/apiKeyText"
@@ -231,85 +314,129 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:fontFamily="monospace"
+                            android:paddingVertical="6dp"
+                            android:textColor="@color/text_primary"
                             android:textSize="13sp"
-                            android:textColor="?attr/colorOnSurface"
-                            tools:text="API Key: sms_cc913de... (tap to copy)" />
+                            tools:text="sms_cc91••••••••43b5" />
 
-                        <Button
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/toggleKeyVisibilityButton"
+                            style="@style/Widget.App.IconButton"
+                            android:layout_width="@dimen/touch_target_min"
+                            android:layout_height="@dimen/touch_target_min"
+                            android:contentDescription="Reveal or hide API key"
+                            app:icon="@drawable/ic_visibility"
+                            app:iconTint="@color/text_secondary" />
+
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/copyKeyButton"
-                            style="@style/Widget.Material3.Button.TextButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="36dp"
-                            android:minHeight="36dp"
-                            android:paddingHorizontal="10dp"
-                            android:text="Copy"
-                            android:textSize="12sp" />
+                            style="@style/Widget.App.IconButton"
+                            android:layout_width="@dimen/touch_target_min"
+                            android:layout_height="@dimen/touch_target_min"
+                            android:contentDescription="Copy API key"
+                            app:icon="@drawable/ic_copy"
+                            app:iconTint="@color/accent_link" />
 
                     </LinearLayout>
 
-                    <!-- Code Preview / URLs -->
-                    <TextView
-                        android:id="@+id/apiUrlsText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/bg_status_badge"
-                        android:backgroundTint="@color/code_background"
-                        android:fontFamily="monospace"
-                        android:lineSpacingExtra="3dp"
-                        android:padding="12dp"
-                        android:textColor="@color/code_text"
-                        android:textSize="11sp"
-                        tools:text="POST http://192.168.1.38:8080/api/send\nHeaders: X-API-Key: ...\nBody: { phone_number, message }" />
-
-                    <!-- Quick Action Buttons -->
+                    <!-- Request Code Preview Header -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginTop="@dimen/space_12"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal">
 
-                        <Button
-                            android:id="@+id/testApiButton"
-                            style="@style/Widget.Material3.Button.TonalButton"
+                        <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_marginEnd="6dp"
-                            android:text="Test API"
-                            android:textSize="13sp" />
+                            android:text="Request Preview"
+                            android:textAppearance="@style/TextAppearance.App.BodySecondary" />
 
-                        <Button
-                            android:id="@+id/openDashboardButton"
-                            style="@style/Widget.Material3.Button.OutlinedButton"
-                            android:layout_width="0dp"
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/copyCodeButton"
+                            style="@style/Widget.App.Button.Tertiary"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="6dp"
-                            android:text="Dashboard"
-                            android:textSize="13sp" />
+                            android:paddingHorizontal="@dimen/space_8"
+                            android:text="Copy Code"
+                            app:icon="@drawable/ic_copy"
+                            app:iconGravity="textStart"
+                            app:iconSize="16dp" />
 
                     </LinearLayout>
 
-                    <Button
-                        android:id="@+id/externalDomainButton"
-                        style="@style/Widget.Material3.Button.TextButton"
+                    <!-- Horizontally Scrollable Syntax-Highlighted Code Block -->
+                    <HorizontalScrollView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
+                        android:background="@drawable/bg_code_box"
+                        android:fillViewport="true"
+                        android:scrollbars="horizontal">
+
+                        <TextView
+                            android:id="@+id/apiUrlsText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/space_12"
+                            android:textAppearance="@style/TextAppearance.App.Code"
+                            tools:text="POST http://192.168.1.38:8080/api/send\nX-API-Key: &lt;YOUR_API_KEY&gt;\n{\n  &quot;phone_number&quot;: &quot;+918114963709&quot;,\n  &quot;message&quot;: &quot;Your OTP is 123456&quot;\n}" />
+
+                    </HorizontalScrollView>
+
+                    <!-- Secondary Actions Row -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_12"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/testApiButton"
+                            style="@style/Widget.App.Button.Secondary"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/space_4"
+                            android:layout_weight="1"
+                            android:text="Test API"
+                            app:icon="@drawable/ic_terminal"
+                            app:iconGravity="textStart" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/openDashboardButton"
+                            style="@style/Widget.App.Button.Secondary"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/space_4"
+                            android:layout_weight="1"
+                            android:text="Dashboard"
+                            app:icon="@drawable/ic_dashboard"
+                            app:iconGravity="textStart" />
+
+                    </LinearLayout>
+
+                    <!-- Tertiary Action: External Domain -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/externalDomainButton"
+                        style="@style/Widget.App.Button.Tertiary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_4"
                         android:text="Setup External Domain"
-                        android:textSize="12sp" />
+                        app:icon="@drawable/ic_web"
+                        app:iconGravity="textStart" />
 
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- 3. SMS Activity Section Header -->
+            <!-- 3. Outbound SMS History Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="@dimen/space_20"
+                android:layout_marginBottom="@dimen/space_8"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -318,63 +445,64 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Outbound SMS History"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="?attr/colorOnSurface" />
+                    android:textAppearance="@style/TextAppearance.App.SectionHeading" />
 
                 <TextView
                     android:id="@+id/historyCountBadge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_status_badge"
-                    android:backgroundTint="?attr/colorSurfaceVariant"
+                    android:background="@drawable/bg_pill_badge"
                     android:paddingHorizontal="10dp"
-                    android:paddingVertical="3dp"
-                    android:textColor="?attr/colorOnSurfaceVariant"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
+                    android:paddingVertical="4dp"
+                    android:textAppearance="@style/TextAppearance.App.StatusLabel"
+                    android:textColor="@color/text_secondary"
                     tools:text="2 sent" />
 
             </LinearLayout>
 
-            <!-- Empty State Layout -->
-            <LinearLayout
+            <!-- Compact Empty State -->
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/emptyHistoryLayout"
+                style="@style/Widget.App.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:paddingVertical="32dp"
                 android:visibility="gone"
                 tools:visibility="visible">
 
-                <ImageView
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:src="@drawable/ic_empty_history"
-                    app:tint="?attr/colorOutline" />
-
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="No SMS Messages Yet"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
                     android:gravity="center"
-                    android:text="OTPs and messages sent via API will appear here in real-time."
-                    android:textSize="13sp"
-                    android:textColor="?attr/colorOutline" />
+                    android:orientation="vertical"
+                    android:padding="@dimen/space_24">
 
-            </LinearLayout>
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:contentDescription="No SMS messages"
+                        android:src="@drawable/ic_empty_history"
+                        app:tint="@color/text_muted" />
 
-            <!-- SMS History Recycler View -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_12"
+                        android:text="No SMS messages yet"
+                        android:textAppearance="@style/TextAppearance.App.CardHeading" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_4"
+                        android:gravity="center"
+                        android:text="OTPs and messages sent via REST API or this app will appear here."
+                        android:textAppearance="@style/TextAppearance.App.BodySecondary" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- SMS History List -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/smsHistoryRecyclerView"
                 android:layout_width="match_parent"
@@ -387,17 +515,22 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Extended Floating Action Button for Composing SMS -->
+    <!-- Compact Solid Blue Primary FAB -->
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/sendSmsFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
+        android:layout_margin="@dimen/space_16"
+        android:contentDescription="Send SMS"
         android:text="Send SMS"
-        android:textColor="?attr/colorOnPrimary"
+        android:textAllCaps="false"
+        android:textColor="@color/accent_on_primary"
+        android:textSize="14sp"
+        app:backgroundTint="@color/accent_primary"
+        app:elevation="4dp"
         app:icon="@drawable/ic_send"
-        app:iconTint="?attr/colorOnPrimary"
-        app:backgroundTint="?attr/colorPrimary" />
+        app:iconSize="@dimen/icon_standard"
+        app:iconTint="@color/accent_on_primary" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
