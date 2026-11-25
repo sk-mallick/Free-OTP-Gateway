@@ -1,9 +1,7 @@
 # 📱 Free OTP Gateway — Android SMS & OTP REST Server
 
 <p align="center">
-  <img src="images/app_overview.png" alt="Free OTP Gateway Overview" width="340" />
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="images/sms_history.png" alt="Outbound SMS History" width="340" />
+  <img src="images/banner.png" alt="Free OTP Gateway Banner" width="100%" />
 </p>
 
 <p align="center">
@@ -18,6 +16,24 @@
   <img src="https://img.shields.io/badge/UI-Monochrome%20Material%203-000000?style=flat-square" />
   <img src="https://img.shields.io/badge/License-MIT-000000?style=flat-square" />
   <img src="https://img.shields.io/badge/Version-1.4-000000?style=flat-square" />
+</p>
+
+---
+
+## 📸 App Screenshots
+
+<p align="center">
+  <img src="images/app_overview.png" alt="Free OTP Gateway Overview" width="340" />
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="images/sms_history.png" alt="Outbound SMS History" width="340" />
+</p>
+
+---
+
+## 🔄 How It Works
+
+<p align="center">
+  <img src="images/how_its_work.png" alt="How Free OTP Gateway Works" width="600" />
 </p>
 
 ---
