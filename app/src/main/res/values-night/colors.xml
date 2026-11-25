@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Unified Dark Developer Utility Theme (mirrors values/colors.xml) -->
     <color name="bg_app">#080808</color>
     <color name="bg_header">#121212</color>
     <color name="bg_card">#1E1E1E</color>
-    <color name="bg_elevated">#262626</color>
-    <color name="bg_dialog">#262626</color>
+    <color name="bg_dialog">#242424</color>
+    <color name="bg_elevated">#292929</color>
     <color name="bg_input">#141414</color>
     <color name="bg_code">#141414</color>
     <color name="bg_disabled">#303030</color>

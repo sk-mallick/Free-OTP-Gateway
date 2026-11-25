@@ -9,15 +9,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingHorizontal="@dimen/space_24"
-        android:paddingTop="@dimen/space_12"
-        android:paddingBottom="@dimen/space_8">
+        android:paddingHorizontal="@dimen/space_16"
+        android:paddingTop="@dimen/space_8"
+        android:paddingBottom="@dimen/space_16">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/space_16"
-            android:text="Configure the TCP listening port for the local HTTP REST server. The server will restart automatically if currently running."
+            android:layout_marginBottom="@dimen/space_10"
+            android:text="Set the TCP listening port. Running servers restart automatically."
+            android:textAppearance="@style/TextAppearance.App.BodySecondary" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/space_4"
+            android:text="Port Number"
             android:textAppearance="@style/TextAppearance.App.BodySecondary" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -25,11 +32,10 @@
             style="@style/Widget.App.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Server Port"
-            app:errorEnabled="true"
-            app:helperText="Valid range: 1024 - 65535 (Default: 8080)"
+            android:layout_marginBottom="@dimen/space_12"
+            app:helperText="Range: 1024 - 65535 (Default: 8080)"
             app:helperTextTextColor="@color/text_muted"
-            app:placeholderText="8080">
+            app:hintEnabled="false">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/portInputEditText"
@@ -37,13 +43,42 @@
                 android:layout_height="wrap_content"
                 android:minHeight="@dimen/input_min_height"
                 android:fontFamily="monospace"
+                android:hint="8080"
                 android:inputType="number"
                 android:maxLength="5"
                 android:maxLines="1"
+                android:paddingVertical="10dp"
                 android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_placeholder"
                 android:textSize="16sp" />
 
         </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Consistent Action Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCancelPort"
+                style="@style/Widget.App.Button.Secondary"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_4"
+                android:layout_weight="1"
+                android:text="Cancel" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSavePort"
+                style="@style/Widget.App.Button.Primary"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_4"
+                android:layout_weight="1"
+                android:text="Save" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

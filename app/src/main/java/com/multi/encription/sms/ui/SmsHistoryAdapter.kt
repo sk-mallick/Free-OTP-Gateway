@@ -41,7 +41,6 @@ class SmsHistoryAdapter(
         private val statusIndicatorDot: View = itemView.findViewById(R.id.statusIndicatorDot)
         private val statusText: TextView = itemView.findViewById(R.id.statusText)
         private val timestampText: TextView = itemView.findViewById(R.id.timestampText)
-        private val requestIdText: TextView = itemView.findViewById(R.id.requestIdText)
 
         private val dateFormat = SimpleDateFormat("MMM d, h:mm a", Locale.getDefault())
 
@@ -84,14 +83,6 @@ class SmsHistoryAdapter(
             statusBadgeContainer.backgroundTintList = ColorStateList.valueOf(bgColor)
 
             timestampText.text = dateFormat.format(Date(sms.timestamp))
-
-            if (!sms.requestId.isNullOrBlank()) {
-                val shortId = if (sms.requestId.length > 8) sms.requestId.take(8) else sms.requestId
-                requestIdText.text = "ID: $shortId"
-                requestIdText.visibility = View.VISIBLE
-            } else {
-                requestIdText.visibility = View.GONE
-            }
 
             itemView.setOnClickListener {
                 onItemClick(sms)

@@ -19,8 +19,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.TooltipCompat
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -30,7 +30,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputEditText
@@ -56,6 +56,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var smsHistoryAdapter: SmsHistoryAdapter
 
     private var isApiKeyVisible = false
+    private var isRequestPreviewExpanded = false
+    private var activeSnackbar: Snackbar? = null
 
     // UI Components
     private lateinit var rootCoordinator: CoordinatorLayout
@@ -73,6 +75,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var toggleKeyVisibilityButton: MaterialButton
     private lateinit var copyKeyButton: MaterialButton
     private lateinit var regenerateKeyButton: MaterialButton
+    private lateinit var requestPreviewHeader: View
+    private lateinit var requestPreviewBody: View
+    private lateinit var requestPreviewExpandIcon: ImageView
     private lateinit var copyCodeButton: MaterialButton
     private lateinit var apiUrlsText: TextView
     private lateinit var testApiButton: MaterialButton
@@ -81,7 +86,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var historyCountBadge: TextView
     private lateinit var emptyHistoryLayout: View
     private lateinit var smsHistoryRecyclerView: RecyclerView
-    private lateinit var sendSmsFab: ExtendedFloatingActionButton
+    private lateinit var sendSmsFab: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,7 +104,7 @@ class MainActivity : AppCompatActivity() {
         }
         ViewCompat.setOnApplyWindowInsetsListener(nestedScrollView) { v, insets ->
             val navBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
-            v.setPadding(0, 0, 0, navBars.bottom + dpToPx(92))
+            v.setPadding(0, 0, 0, navBars.bottom + dpToPx(80))
             insets
         }
         ViewCompat.setOnApplyWindowInsetsListener(fab) { v, insets ->
@@ -123,7 +128,17 @@ class MainActivity : AppCompatActivity() {
         ).toInt()
     }
 
+    /**
+     * Returns a MaterialAlertDialogBuilder with a strictly neutral charcoal surface (#242424)
+     * and zero blue tonal tint overlay.
+     */
+    private fun createNeutralDialog(): MaterialAlertDialogBuilder {
+        return MaterialAlertDialogBuilder(this)
+            .setBackground(ContextCompat.getDrawable(this, R.drawable.bg_dialog_surface))
+    }
+
     private fun showFeedback(message: String, isError: Boolean = false) {
+        activeSnackbar?.dismiss()
         val snackbar = Snackbar.make(rootCoordinator, message, Snackbar.LENGTH_SHORT)
         snackbar.anchorView = sendSmsFab
         snackbar.setBackgroundTint(
@@ -138,6 +153,7 @@ class MainActivity : AppCompatActivity() {
                 if (isError) R.color.accent_error_text else R.color.text_primary
             )
         )
+        activeSnackbar = snackbar
         snackbar.show()
     }
 
@@ -161,6 +177,9 @@ class MainActivity : AppCompatActivity() {
         toggleKeyVisibilityButton = findViewById(R.id.toggleKeyVisibilityButton)
         copyKeyButton = findViewById(R.id.copyKeyButton)
         regenerateKeyButton = findViewById(R.id.regenerateKeyButton)
+        requestPreviewHeader = findViewById(R.id.requestPreviewHeader)
+        requestPreviewBody = findViewById(R.id.requestPreviewBody)
+        requestPreviewExpandIcon = findViewById(R.id.requestPreviewExpandIcon)
         copyCodeButton = findViewById(R.id.copyCodeButton)
         apiUrlsText = findViewById(R.id.apiUrlsText)
         testApiButton = findViewById(R.id.testApiButton)
@@ -173,6 +192,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupUI() {
+        TooltipCompat.setTooltipText(sendSmsFab, "Send SMS")
+
         smsHistoryAdapter = SmsHistoryAdapter { sms ->
             showSmsDetails(sms)
         }
@@ -238,6 +259,14 @@ class MainActivity : AppCompatActivity() {
             showRegenerateKeyConfirmationDialog()
         }
 
+        requestPreviewHeader.setOnClickListener {
+            isRequestPreviewExpanded = !isRequestPreviewExpanded
+            requestPreviewBody.visibility = if (isRequestPreviewExpanded) View.VISIBLE else View.GONE
+            requestPreviewExpandIcon.setImageResource(
+                if (isRequestPreviewExpanded) R.drawable.ic_expand_less else R.drawable.ic_expand_more
+            )
+        }
+
         copyCodeButton.setOnClickListener {
             val baseUrl = configManager.getApiBaseUrl(getDeviceIpAddress())
             val curlCommand = """
@@ -301,7 +330,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showPermissionRationaleDialog() {
-        MaterialAlertDialogBuilder(this)
+        createNeutralDialog()
             .setTitle("SMS Permission Required")
             .setMessage("Free OTP Gateway requires SMS Send and Notification permissions to dispatch OTPs over your device's cellular connection.")
             .setPositiveButton("Grant Permissions") { _, _ ->
@@ -315,7 +344,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showRestrictedSettingsDialog() {
-        MaterialAlertDialogBuilder(this)
+        createNeutralDialog()
             .setTitle("SMS Permission & Restricted Settings")
             .setMessage(
                 "On Android 13, 14, and 15, sideloaded apps require one manual step to enable SMS permissions:\n\n" +
@@ -489,51 +518,54 @@ class MainActivity : AppCompatActivity() {
         val messageLayout = dialogView.findViewById<TextInputLayout>(R.id.messageInputLayout)
         val phoneEditText = dialogView.findViewById<TextInputEditText>(R.id.phoneEditText)
         val messageEditText = dialogView.findViewById<TextInputEditText>(R.id.messageEditText)
+        val btnCancel = dialogView.findViewById<MaterialButton>(R.id.btnCancelSendSms)
+        val btnSend = dialogView.findViewById<MaterialButton>(R.id.btnConfirmSendSms)
 
-        val dialog = MaterialAlertDialogBuilder(this)
+        phoneEditText.setSelection(phoneEditText.text?.length ?: 0)
+
+        val dialog = createNeutralDialog()
             .setTitle("Send SMS")
             .setView(dialogView)
-            .setPositiveButton("Send", null)
-            .setNegativeButton("Cancel", null)
             .create()
 
-        dialog.setOnShowListener {
-            val sendBtn = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-            sendBtn.setOnClickListener {
-                val phone = phoneEditText.text?.toString()?.trim().orEmpty()
-                val message = messageEditText.text?.toString()?.trim().orEmpty()
-                var isValid = true
+        btnCancel.setOnClickListener { dialog.dismiss() }
+        btnSend.setOnClickListener {
+            val phone = phoneEditText.text?.toString()?.trim().orEmpty()
+            val message = messageEditText.text?.toString()?.trim().orEmpty()
+            var isValid = true
 
-                if (phone.length < 4) {
-                    phoneLayout.error = "Enter a valid phone number with country code"
-                    isValid = false
-                } else {
-                    phoneLayout.error = null
-                }
+            if (phone.length < 4) {
+                phoneLayout.isErrorEnabled = true
+                phoneLayout.error = "Enter a valid phone number"
+                isValid = false
+            } else {
+                phoneLayout.error = null
+                phoneLayout.isErrorEnabled = false
+            }
 
-                if (message.isBlank()) {
-                    messageLayout.error = "Enter a message or OTP to send"
-                    isValid = false
-                } else {
-                    messageLayout.error = null
-                }
+            if (message.isBlank()) {
+                messageLayout.isErrorEnabled = true
+                messageLayout.error = "Enter a message or OTP"
+                isValid = false
+            } else {
+                messageLayout.error = null
+                messageLayout.isErrorEnabled = false
+            }
 
-                if (isValid) {
-                    dialog.dismiss()
-                    sendSms(phone, message)
-                }
+            if (isValid) {
+                dialog.dismiss()
+                sendSms(phone, message)
             }
         }
         dialog.show()
     }
 
     private fun sendSms(phoneNumber: String, message: String) {
-        showFeedback("Sending SMS to $phoneNumber...")
         lifecycleScope.launch {
             try {
                 val result = smsManager.sendSms(phoneNumber, message)
                 if (result.isSuccess) {
-                    showFeedback("SMS queued for sending")
+                    showFeedback("SMS queued for $phoneNumber")
                 } else {
                     val error = result.exceptionOrNull()
                     showFeedback("Failed to send SMS: ${error?.message}", isError = true)
@@ -567,13 +599,14 @@ class MainActivity : AppCompatActivity() {
 
         val fmt = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
         val metaLines = mutableListOf<String>()
+        metaLines.add("SMS ID: #${sms.id}")
         metaLines.add("Sent: ${fmt.format(Date(sms.timestamp))}")
         sms.deliveryTimestamp?.let { metaLines.add("Delivered: ${fmt.format(Date(it))}") }
         sms.requestId?.takeIf { it.isNotBlank() }?.let { metaLines.add("Request ID: $it") }
         sms.errorMessage?.takeIf { it.isNotBlank() }?.let { metaLines.add("Error: $it") }
         metadataText.text = metaLines.joinToString("\n")
 
-        MaterialAlertDialogBuilder(this)
+        createNeutralDialog()
             .setTitle("SMS Details")
             .setView(dialogView)
             .setPositiveButton("Copy Message") { _, _ ->
@@ -592,7 +625,7 @@ class MainActivity : AppCompatActivity() {
 
         keyDisplay.text = configManager.apiKey
 
-        val dialog = MaterialAlertDialogBuilder(this)
+        val dialog = createNeutralDialog()
             .setTitle("API Authentication Key")
             .setView(dialogView)
             .create()
@@ -605,17 +638,15 @@ class MainActivity : AppCompatActivity() {
                 keyDisplay.text = configManager.apiKey
             }
         }
-        btnDone.setOnClickListener {
-            dialog.dismiss()
-        }
+        btnDone.setOnClickListener { dialog.dismiss() }
 
         dialog.show()
     }
 
     private fun showRegenerateKeyConfirmationDialog(onRegenerated: (() -> Unit)? = null) {
-        MaterialAlertDialogBuilder(this)
+        createNeutralDialog()
             .setTitle("Generate New API Key?")
-            .setMessage("Replacing the existing API key will immediately disconnect any clients or scripts using the current key until you update them.")
+            .setMessage("Replacing the API key will disconnect existing clients until they are updated with the new key.")
             .setPositiveButton("Generate New") { _, _ ->
                 configManager.regenerateApiKey()
                 updateApiKeyDisplay()
@@ -631,37 +662,38 @@ class MainActivity : AppCompatActivity() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_port, null)
         val portLayout = dialogView.findViewById<TextInputLayout>(R.id.portInputLayout)
         val portInput = dialogView.findViewById<TextInputEditText>(R.id.portInputEditText)
+        val btnCancel = dialogView.findViewById<MaterialButton>(R.id.btnCancelPort)
+        val btnSave = dialogView.findViewById<MaterialButton>(R.id.btnSavePort)
+
         portInput.setText(configManager.serverPort.toString())
         portInput.setSelection(portInput.text?.length ?: 0)
 
-        val dialog = MaterialAlertDialogBuilder(this)
+        val dialog = createNeutralDialog()
             .setTitle("Server Port")
             .setView(dialogView)
-            .setPositiveButton("Save", null)
-            .setNegativeButton("Cancel", null)
             .create()
 
-        dialog.setOnShowListener {
-            val saveBtn = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-            saveBtn.setOnClickListener {
-                val port = portInput.text?.toString()?.trim()?.toIntOrNull()
-                if (port != null && port in 1024..65535) {
-                    portLayout.error = null
-                    configManager.serverPort = port
-                    updatePortDisplay()
-                    updateServerStatus()
-                    updateApiUrls()
+        btnCancel.setOnClickListener { dialog.dismiss() }
+        btnSave.setOnClickListener {
+            val port = portInput.text?.toString()?.trim()?.toIntOrNull()
+            if (port != null && port in 1024..65535) {
+                portLayout.error = null
+                portLayout.isErrorEnabled = false
+                configManager.serverPort = port
+                updatePortDisplay()
+                updateServerStatus()
+                updateApiUrls()
 
-                    if (configManager.isServerEnabled) {
-                        SmsGatewayService.stopService(this)
-                        SmsGatewayService.startService(this)
-                    }
-
-                    dialog.dismiss()
-                    showFeedback("Server port updated to $port")
-                } else {
-                    portLayout.error = "Enter a valid port between 1024 and 65535"
+                if (configManager.isServerEnabled) {
+                    SmsGatewayService.stopService(this)
+                    SmsGatewayService.startService(this)
                 }
+
+                dialog.dismiss()
+                showFeedback("Server port updated to $port")
+            } else {
+                portLayout.isErrorEnabled = true
+                portLayout.error = "Enter a valid port (1024 - 65535)"
             }
         }
         dialog.show()
@@ -674,32 +706,27 @@ class MainActivity : AppCompatActivity() {
             Base URL:
             $baseUrl
 
-            Available Endpoints:
-
             1. Send SMS
             POST $baseUrl/api/send
             Header: X-API-Key: <YOUR_API_KEY>
-            Body: {"phone_number": "+918114963709", "message": "OTP: 123456"}
 
-            2. Check SMS Status
+            2. Check Status
             GET $baseUrl/api/status?sms_id=123
-            Header: X-API-Key: <YOUR_API_KEY>
 
-            3. Get SMS History
+            3. SMS History
             GET $baseUrl/api/history?limit=10
-            Header: X-API-Key: <YOUR_API_KEY>
 
-            4. Server Health Info (No Auth)
+            4. Server Info (No Auth)
             GET $baseUrl/api/info
         """.trimIndent()
 
-        MaterialAlertDialogBuilder(this)
-            .setTitle("API Endpoints Reference")
+        createNeutralDialog()
+            .setTitle("API Endpoints")
             .setMessage(message)
-            .setPositiveButton("Copy Base URL") { _, _ ->
+            .setPositiveButton("Copy URL") { _, _ ->
                 copyToClipboard("Base URL", baseUrl)
             }
-            .setNeutralButton("Copy API Key") { _, _ ->
+            .setNeutralButton("Copy Key") { _, _ ->
                 copyToClipboard("API Key", configManager.apiKey)
             }
             .setNegativeButton("Close", null)
@@ -708,7 +735,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun showTestApiDialog() {
         if (!configManager.isServerEnabled) {
-            showFeedback("Enable the API server first to run tests", isError = true)
+            showFeedback("Enable the API server first", isError = true)
             return
         }
 
@@ -727,7 +754,7 @@ class MainActivity : AppCompatActivity() {
         phoneEditText.setSelection(phoneEditText.text?.length ?: 0)
         messageEditText.setText("Test message from Free OTP Gateway")
 
-        val dialog = MaterialAlertDialogBuilder(this)
+        val dialog = createNeutralDialog()
             .setTitle("Test API - Send SMS")
             .setView(dialogView)
             .create()
@@ -742,17 +769,21 @@ class MainActivity : AppCompatActivity() {
             var isValid = true
 
             if (phone.length < 4) {
+                phoneLayout.isErrorEnabled = true
                 phoneLayout.error = "Enter a valid phone number"
                 isValid = false
             } else {
                 phoneLayout.error = null
+                phoneLayout.isErrorEnabled = false
             }
 
             if (message.isBlank()) {
+                messageLayout.isErrorEnabled = true
                 messageLayout.error = "Enter a test message"
                 isValid = false
             } else {
                 messageLayout.error = null
+                messageLayout.isErrorEnabled = false
             }
 
             if (!isValid) return@setOnClickListener
@@ -773,19 +804,19 @@ class MainActivity : AppCompatActivity() {
                         resultIcon.setImageResource(R.drawable.ic_check_circle)
                         resultIcon.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(this@MainActivity, R.color.accent_success))
                         resultTextView.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.text_primary))
-                        resultTextView.text = "SMS queued successfully (ID: #$smsId). Check Outbound SMS History for delivery status."
+                        resultTextView.text = "SMS queued (ID: #$smsId). Track status in Outbound SMS History."
                     } else {
                         val error = result.exceptionOrNull()
                         resultIcon.setImageResource(R.drawable.ic_error_circle)
                         resultIcon.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(this@MainActivity, R.color.accent_error))
                         resultTextView.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.accent_error_text))
-                        resultTextView.text = "Test failed: ${error?.message ?: "Unknown error"}"
+                        resultTextView.text = "Failed: ${error?.message ?: "Unknown error"}"
                     }
                 } catch (e: Exception) {
                     resultIcon.setImageResource(R.drawable.ic_error_circle)
                     resultIcon.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(this@MainActivity, R.color.accent_error))
                     resultTextView.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.accent_error_text))
-                    resultTextView.text = "Connection error: ${e.message}"
+                    resultTextView.text = "Error: ${e.message}"
                 } finally {
                     isSubmitting = false
                     btnSend.isEnabled = true
@@ -799,12 +830,10 @@ class MainActivity : AppCompatActivity() {
             resultIcon.setImageResource(R.drawable.ic_info)
             resultIcon.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.accent_info))
             resultTextView.setTextColor(ContextCompat.getColor(this, R.color.text_primary))
-            resultTextView.text = "Health Endpoint (No Auth):\n$infoUrl\nOpen in any browser on the same network to verify JSON status."
+            resultTextView.text = "Health Endpoint (No Auth):\n$infoUrl"
         }
 
-        btnClose.setOnClickListener {
-            dialog.dismiss()
-        }
+        btnClose.setOnClickListener { dialog.dismiss() }
 
         dialog.show()
     }
@@ -813,7 +842,7 @@ class MainActivity : AppCompatActivity() {
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
         val clip = android.content.ClipData.newPlainText(label, text)
         clipboard.setPrimaryClip(clip)
-        showFeedback("$label copied to clipboard")
+        showFeedback("$label copied")
     }
 
     private fun updateExternalDomainButton() {
@@ -840,27 +869,26 @@ class MainActivity : AppCompatActivity() {
 
         fun refreshToggleState(checked: Boolean) {
             if (checked) {
-                stateText.text = "Enabled (routing via custom domain)"
+                stateText.text = "Enabled (custom domain)"
                 stateText.setTextColor(ContextCompat.getColor(this, R.color.accent_success))
             } else {
-                stateText.text = "Disabled (using local IP address)"
+                stateText.text = "Disabled (local IP)"
                 stateText.setTextColor(ContextCompat.getColor(this, R.color.text_muted))
             }
         }
         refreshToggleState(enableSwitch.isChecked)
         enableSwitch.setOnCheckedChangeListener { _, isChecked ->
             refreshToggleState(isChecked)
-            if (!isChecked) domainLayout.error = null
+            if (!isChecked) {
+                domainLayout.error = null
+                domainLayout.isErrorEnabled = false
+            }
         }
 
         val deviceAddr = "${getDeviceIpAddress()}:${configManager.serverPort}"
-        instructionsText.text = """
-            1. Set up a Cloudflare Tunnel or Nginx reverse proxy.
-            2. Forward incoming HTTPS traffic to $deviceAddr.
-            3. Enter your public domain above and enable routing.
-        """.trimIndent()
+        instructionsText.text = "Forward HTTPS traffic to $deviceAddr using Cloudflare Tunnel or Nginx. See Setup Guide for commands."
 
-        val dialog = MaterialAlertDialogBuilder(this)
+        val dialog = createNeutralDialog()
             .setTitle("External Domain Setup")
             .setView(dialogView)
             .create()
@@ -870,11 +898,13 @@ class MainActivity : AppCompatActivity() {
             val enabled = enableSwitch.isChecked
 
             if (enabled && domain.isBlank()) {
-                domainLayout.error = "Enter a domain name to enable custom routing"
+                domainLayout.isErrorEnabled = true
+                domainLayout.error = "Enter a domain name"
                 return@setOnClickListener
             }
 
             domainLayout.error = null
+            domainLayout.isErrorEnabled = false
             configManager.externalDomain = domain
             configManager.useExternalDomain = enabled
 
@@ -885,7 +915,7 @@ class MainActivity : AppCompatActivity() {
             if (enabled) {
                 showFeedback("External domain saved: $domain")
             } else {
-                showFeedback("Switched to local network access")
+                showFeedback("Using local network access")
             }
         }
 
@@ -894,9 +924,7 @@ class MainActivity : AppCompatActivity() {
             showExternalDomainSetupGuide()
         }
 
-        btnCancel.setOnClickListener {
-            dialog.dismiss()
-        }
+        btnCancel.setOnClickListener { dialog.dismiss() }
 
         dialog.show()
     }
@@ -926,20 +954,14 @@ class MainActivity : AppCompatActivity() {
         cfCmdText.text = cfCommand
         nginxText.text = nginxConfig
 
-        val dialog = MaterialAlertDialogBuilder(this)
+        val dialog = createNeutralDialog()
             .setTitle("External Domain Setup Guide")
             .setView(dialogView)
             .create()
 
-        btnCopyAddress.setOnClickListener {
-            copyToClipboard("Device Address", deviceAddress)
-        }
-        btnCopyCf.setOnClickListener {
-            copyToClipboard("Cloudflare Command", cfCommand)
-        }
-        btnClose.setOnClickListener {
-            dialog.dismiss()
-        }
+        btnCopyAddress.setOnClickListener { copyToClipboard("Device Address", deviceAddress) }
+        btnCopyCf.setOnClickListener { copyToClipboard("Cloudflare Command", cfCommand) }
+        btnClose.setOnClickListener { dialog.dismiss() }
 
         dialog.show()
     }

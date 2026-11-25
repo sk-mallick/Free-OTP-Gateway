@@ -9,24 +9,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingHorizontal="@dimen/space_24"
-        android:paddingTop="@dimen/space_12"
+        android:paddingHorizontal="@dimen/space_16"
+        android:paddingTop="@dimen/space_8"
         android:paddingBottom="@dimen/space_16">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/space_12"
-            android:text="Include this secret key in the X-API-Key header to authenticate REST API requests."
+            android:layout_marginBottom="@dimen/space_8"
+            android:text="Pass this key in the X-API-Key header to authenticate requests."
             android:textAppearance="@style/TextAppearance.App.BodySecondary" />
 
-        <!-- Monospace Selectable Key Box (wraps cleanly without clipping) -->
+        <!-- Monospace Selectable Key Box -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_endpoint_box"
             android:orientation="vertical"
-            android:padding="@dimen/space_12">
+            android:padding="@dimen/space_10">
 
             <TextView
                 android:id="@+id/dialogApiKeyDisplay"
@@ -35,25 +35,23 @@
                 android:fontFamily="monospace"
                 android:textColor="@color/accent_auth"
                 android:textIsSelectable="true"
-                android:textSize="14sp"
+                android:textSize="13sp"
                 android:textStyle="bold" />
 
         </LinearLayout>
 
-        <!-- Security Info Note -->
+        <!-- Concise Security Notice -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_12"
-            android:layout_marginBottom="@dimen/space_16"
-            android:background="@drawable/bg_info_box"
+            android:layout_marginTop="@dimen/space_8"
+            android:layout_marginBottom="@dimen/space_12"
             android:gravity="top"
-            android:orientation="horizontal"
-            android:padding="@dimen/space_12">
+            android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="18dp"
-                android:layout_height="18dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:layout_marginTop="2dp"
                 android:contentDescription="Security notice"
                 android:src="@drawable/ic_info"
@@ -62,10 +60,10 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/space_8"
+                android:layout_marginStart="@dimen/space_6"
                 android:layout_weight="1"
-                android:text="Keep this key private. Generating a new key will immediately invalidate the current key for all connected clients."
-                android:textAppearance="@style/TextAppearance.App.BodySecondary" />
+                android:text="Regenerating invalidates the current key for connected clients."
+                android:textAppearance="@style/TextAppearance.App.Helper" />
 
         </LinearLayout>
 
@@ -79,11 +77,11 @@
             app:icon="@drawable/ic_copy"
             app:iconGravity="textStart" />
 
-        <!-- Secondary & Destructive Row -->
+        <!-- Destructive & Secondary Row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_8"
+            android:layout_marginTop="@dimen/space_6"
             android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton

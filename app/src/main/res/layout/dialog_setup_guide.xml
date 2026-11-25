@@ -9,8 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingHorizontal="@dimen/space_24"
-        android:paddingTop="@dimen/space_12"
+        android:paddingHorizontal="@dimen/space_16"
+        android:paddingTop="@dimen/space_8"
         android:paddingBottom="@dimen/space_16">
 
         <!-- Section 1: Android Device Address -->
@@ -23,14 +23,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_8"
-            android:layout_marginBottom="@dimen/space_16"
+            android:layout_marginTop="@dimen/space_4"
+            android:layout_marginBottom="@dimen/space_12"
             android:background="@drawable/bg_endpoint_box"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingStart="@dimen/space_12"
-            android:paddingEnd="@dimen/space_4"
-            android:paddingVertical="@dimen/space_4">
+            android:paddingStart="@dimen/space_10"
+            android:paddingEnd="2dp">
 
             <TextView
                 android:id="@+id/guideDeviceAddressText"
@@ -38,6 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="monospace"
+                android:paddingVertical="8dp"
                 android:textColor="@color/accent_info"
                 android:textIsSelectable="true"
                 android:textSize="13sp" />
@@ -64,14 +64,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_4"
-            android:text="1. Install cloudflared on a computer connected to the same Wi-Fi.\n2. Run the command below to expose this device over HTTPS:"
+            android:text="1. Install cloudflared on a PC on the same Wi-Fi.\n2. Run this command to expose over HTTPS:"
             android:textAppearance="@style/TextAppearance.App.BodySecondary" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_8"
-            android:layout_marginBottom="@dimen/space_16"
+            android:layout_marginTop="@dimen/space_6"
+            android:layout_marginBottom="@dimen/space_12"
             android:background="@drawable/bg_code_box"
             android:gravity="center_vertical"
             android:orientation="horizontal">
@@ -86,7 +86,7 @@
                     android:id="@+id/guideCloudflareCmdText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/space_12"
+                    android:padding="@dimen/space_10"
                     android:textAppearance="@style/TextAppearance.App.Code" />
 
             </HorizontalScrollView>
@@ -113,14 +113,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_4"
-            android:text="1. Point your domain DNS (e.g. sms.yourdomain.com) to your VPS.\n2. Forward incoming HTTPS traffic to this device via VPN or port forwarding:"
+            android:text="1. Point your domain DNS to your VPS.\n2. Proxy incoming HTTPS traffic to this device:"
             android:textAppearance="@style/TextAppearance.App.BodySecondary" />
 
         <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_8"
-            android:layout_marginBottom="@dimen/space_16"
+            android:layout_marginTop="@dimen/space_6"
+            android:layout_marginBottom="@dimen/space_12"
             android:background="@drawable/bg_code_box"
             android:scrollbars="horizontal">
 
@@ -128,7 +128,7 @@
                 android:id="@+id/guideNginxConfigText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/space_12"
+                android:padding="@dimen/space_10"
                 android:textAppearance="@style/TextAppearance.App.Code" />
 
         </HorizontalScrollView>
