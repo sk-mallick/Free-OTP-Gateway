@@ -11,11 +11,11 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Platform-Android%207.0%2B%20(API%2024--35)-000000?style=flat-square&logo=android&logoColor=white" />
-  <img src="https://img.shields.io/badge/Language-Kotlin%202.0-000000?style=flat-square&logo=kotlin&logoColor=white" />
-  <img src="https://img.shields.io/badge/UI-Monochrome%20Material%203-000000?style=flat-square" />
-  <img src="https://img.shields.io/badge/License-MIT-000000?style=flat-square" />
-  <img src="https://img.shields.io/badge/Version-1.4-000000?style=flat-square" />
+  <img src="https://img.shields.io/badge/Platform-Android%207.0%2B%20(API%2024--35)-1E1E1E?style=flat-square&logo=android&logoColor=22C55E" />
+  <img src="https://img.shields.io/badge/Language-Kotlin%202.0-1E1E1E?style=flat-square&logo=kotlin&logoColor=A78BFA" />
+  <img src="https://img.shields.io/badge/UI-Dark%20Material%203-2563EB?style=flat-square" />
+  <img src="https://img.shields.io/badge/License-MIT-1E1E1E?style=flat-square" />
+  <img src="https://img.shields.io/badge/Version-1.5-2563EB?style=flat-square" />
 </p>
 
 ---
@@ -23,9 +23,13 @@
 ## 📸 App Screenshots
 
 <p align="center">
-  <img src="images/app_overview.png" alt="Free OTP Gateway Overview" width="340" />
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="images/sms_history.png" alt="Outbound SMS History" width="340" />
+  <img src="images/app_overview.png" alt="Free OTP Gateway Overview" width="210" />
+  &nbsp;&nbsp;
+  <img src="images/sms_history.png" alt="Outbound SMS History" width="210" />
+  &nbsp;&nbsp;
+  <img src="images/dialog_test_api.png" alt="Test API Dialog" width="210" />
+  &nbsp;&nbsp;
+  <img src="images/dialog_setup_guide.png" alt="External Domain Setup Guide" width="210" />
 </p>
 
 ---
@@ -55,7 +59,7 @@
 ## 🚀 Quick Download & Install
 
 1. Download the latest compiled release:
-   👉 **[Download Free-OTP-Gateway.apk](release/Free-OTP-Gateway.apk)** (or [Free-OTP-Gateway-v1.4.apk](release/Free-OTP-Gateway-v1.4.apk))
+   👉 **[Download Free-OTP-Gateway.apk](release/Free-OTP-Gateway.apk)** (or [Free-OTP-Gateway-v1.5.apk](release/Free-OTP-Gateway-v1.5.apk))
 2. Transfer or download the APK to your Android device and tap **Install**.
 3. Launch **Free OTP Gateway** and grant SMS permissions.
 
