@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free OTP & SMS Gateway</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --surface: #111827;
+      --surface-hover: #172033;
+      --border: #1f293d;
+      --border-focus: #3b82f6;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --success: #10b981;
+      --success-bg: rgba(16, 185, 129, 0.12);
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: white;
+    }
+    .brand h1 { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.02em; }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      background: var(--success-bg);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
+    }
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 1.5rem auto;
+      padding: 0 1rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      flex: 1;
+    }
+    @media (min-width: 900px) {
+      .container { grid-template-columns: 420px 1fr; }
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
+    }
+    input, textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.65rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    input:focus, textarea:focus {
+      border-color: var(--border-focus);
+    }
+    textarea { resize: vertical; min-height: 85px; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: background 0.15s, transform 0.05s;
+      width: 100%;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-secondary {
+      background: var(--border);
+      color: var(--text);
+      width: auto;
+      padding: 0.35rem 0.7rem;
+      font-size: 0.8rem;
+    }
+    .btn-secondary:hover { background: var(--surface-hover); }
+    .otp-helpers {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .api-key-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.6rem 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      word-break: break-all;
+    }
+    .table-wrapper {
+      overflow-x: auto;
+      max-height: 480px;
+      overflow-y: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+      text-align: left;
+    }
+    th {
+      background: var(--surface-hover);
+      color: var(--text-muted);
+      font-weight: 600;
+      padding: 0.65rem 0.75rem;
+      position: sticky;
+      top: 0;
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    tr:hover { background: var(--surface-hover); }
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .badge-pending { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+    .badge-sent { background: var(--success-bg); color: var(--success); }
+    .badge-failed { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      padding: 0.85rem 1.25rem;
+      border-radius: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      display: none;
+      z-index: 100;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .toast.show { display: block; animation: slideUp 0.2s ease-out; }
+    @keyframes slideUp {
+      from { transform: translateY(12px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .tab-list {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.35rem 0.65rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .tab-btn.active {
+      color: white;
+      background: var(--primary);
+    }
+    pre {
+      background: var(--bg);
+      padding: 0.75rem;
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      overflow-x: auto;
+      border: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-icon">⚡</div>
+      <div>
+        <h1>Free OTP & SMS Gateway</h1>
+        <small style="color:var(--text-muted);">Android Local Cellular Bridge</small>
+      </div>
+    </div>
+    <div style="display:flex; align-items:center; gap:0.75rem;">
+      <div class="status-badge">
+        <span class="pulse-dot"></span>
+        <span id="serverStatusText">Online (Port {{PORT}})</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Left Column: Send SMS Form & API Key -->
+    <div style="display:flex; flex-direction:column; gap:1.5rem;">
+
+      <!-- Send SMS Card -->
+      <div class="card">
+        <div class="card-title">
+          <span>📤 Send SMS / OTP</span>
+        </div>
+
+        <form id="sendForm">
+          <div class="form-group">
+            <label for="phoneNumber">Mobile Number (with country code):</label>
+            <input type="text" id="phoneNumber" placeholder="+918114963709" value="+918114963709" required>
+          </div>
+
+          <div class="form-group">
+            <label for="message">Message Content:</label>
+            <textarea id="message" required placeholder="Enter OTP or message...">Your OTP is 492018. Valid for 10 minutes.</textarea>
+            <div class="otp-helpers">
+              <button type="button" class="btn btn-secondary" onclick="generateOtp()">⚡ Generate 6-Digit OTP</button>
+              <button type="button" class="btn btn-secondary" onclick="generate4DigitOtp()">⚡ 4-Digit</button>
+            </div>
+          </div>
+
+          <button type="submit" id="sendBtn" class="btn btn-primary">
+            <span>Send Message</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- API Key & Gateway Info Card -->
+      <div class="card">
+        <div class="card-title">
+          <span>🔑 Gateway Access</span>
+        </div>
+        <div class="form-group">
+          <label>API Key:</label>
+          <div class="api-key-box">
+            <span id="apiKeyDisplay">{{API_KEY}}</span>
+            <button class="btn btn-secondary" onclick="copyApiKey()">Copy</button>
+          </div>
+        </div>
+        <p style="font-size:0.8rem; color:var(--text-muted);">
+          Requests to <code>http://localhost:{{PORT}}/api/send</code> use this key via the <code>X-API-Key</code> header or URL parameter <code>?api_key=...</code>.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Right Column: SMS History & Code Snippets -->
+    <div style="display:flex; flex-direction:column; gap:1.5rem;">
+
+      <!-- SMS History Card -->
+      <div class="card" style="flex:1;">
+        <div class="card-title">
+          <span>📋 Message History</span>
+          <button class="btn btn-secondary" onclick="fetchHistory()">↻ Refresh</button>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Recipient</th>
+                <th>Message</th>
+                <th>Status</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody id="historyBody">
+              <tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:2rem;">Loading messages...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Quick Integration Snippets -->
+      <div class="card">
+        <div class="card-title">
+          <span>💻 Integration Examples</span>
+        </div>
+        <div class="tab-list">
+          <button class="tab-btn active" onclick="switchSnippet('curl')">cURL</button>
+          <button class="tab-btn" onclick="switchSnippet('python')">Python</button>
+          <button class="tab-btn" onclick="switchSnippet('js')">JavaScript / Node</button>
+        </div>
+        <div id="snippetContainer">
+          <pre id="snippetCode"></pre>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    const API_KEY = "{{API_KEY}}";
+    const BASE_URL = "http://" + window.location.host;
+
+    function showToast(msg, isSuccess = true) {
+      const toast = document.getElementById("toast");
+      toast.textContent = msg;
+      toast.style.borderColor = isSuccess ? "var(--success)" : "var(--danger)";
+      toast.className = "toast show";
+      setTimeout(() => { toast.className = "toast"; }, 3500);
+    }
+
+    function copyApiKey() {
+      navigator.clipboard.writeText(API_KEY);
+      showToast("API Key copied to clipboard!");
+    }
+
+    function generateOtp() {
+      const code = Math.floor(100000 + Math.random() * 900000);
+      document.getElementById("message").value = "Your OTP is " + code + ". Valid for 10 minutes.";
+    }
+
+    function generate4DigitOtp() {
+      const code = Math.floor(1000 + Math.random() * 9000);
+      document.getElementById("message").value = "Your OTP is " + code + ". Valid for 5 minutes.";
+    }
+
+    async function fetchHistory() {
+      const tbody = document.getElementById("historyBody");
+      try {
+        const res = await fetch(BASE_URL + "/api/history?api_key=" + API_KEY);
+        const data = await res.json();
+        if (data.success && data.data) {
+          if (data.data.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:2rem;">No messages sent yet.</td></tr>';
+            return;
+          }
+          tbody.innerHTML = data.data.map(item => {
+            const statusClass = (item.status === 'SENT' || item.status === 'DELIVERED') ? 'badge-sent' :
+                               (item.status === 'FAILED') ? 'badge-failed' : 'badge-pending';
+            const time = item.timestamp ? new Date(item.timestamp).toLocaleTimeString() : '-';
+            return `
+              <tr>
+                <td>#` + (item.sms_id || '-') + `</td>
+                <td><strong>` + escapeHtml(item.phone_number || '') + `</strong></td>
+                <td style="max-width:260px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="` + escapeHtml(item.message || '') + `">` + escapeHtml(item.message || '') + `</td>
+                <td><span class="badge ` + statusClass + `">` + (item.status || 'PENDING') + `</span></td>
+                <td style="color:var(--text-muted); font-size:0.8rem;">` + time + `</td>
+              </tr>
+            `;
+          }).join("");
+        }
+      } catch (e) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--danger); padding:1rem;">Failed to load history</td></tr>';
+      }
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    document.getElementById("sendForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const sendBtn = document.getElementById("sendBtn");
+      const phone = document.getElementById("phoneNumber").value.trim();
+      const msg = document.getElementById("message").value.trim();
+
+      sendBtn.disabled = true;
+      sendBtn.textContent = "Sending...";
+
+      try {
+        const res = await fetch(BASE_URL + "/api/send", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-API-Key": API_KEY
+          },
+          body: JSON.stringify({ phone_number: phone, message: msg })
+        });
+        const result = await res.json();
+        if (result.success) {
+          showToast("SMS queued successfully! (ID: " + result.sms_id + ")", true);
+          fetchHistory();
+        } else {
+          showToast(result.error || "Failed to send SMS", false);
+        }
+      } catch (err) {
+        showToast("Error connecting to server: " + err.message, false);
+      } finally {
+        sendBtn.disabled = false;
+        sendBtn.textContent = "Send Message";
+      }
+    });
+
+    const snippets = {
+      curl: `curl -X POST http://localhost:{{PORT}}/api/send \\
+  -H "Content-Type: application/json" \\
+  -H "X-API-Key: {{API_KEY}}" \\
+  -d '{"phone_number": "+918114963709", "message": "Your OTP is 123456"}'`,
+      python: `import requests
+
+res = requests.post(
+    "http://localhost:{{PORT}}/api/send",
+    headers={"X-API-Key": "{{API_KEY}}"},
+    json={"phone_number": "+918114963709", "message": "Your OTP is 123456"}
+)
+print(res.json())`,
+      js: `const res = await fetch("http://localhost:{{PORT}}/api/send", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "X-API-Key": "{{API_KEY}}"
+  },
+  body: JSON.stringify({
+    phone_number: "+918114963709",
+    message: "Your OTP is 123456"
+  })
+});
+const data = await res.json();
+console.log(data);`
+    };
+
+    function switchSnippet(type) {
+      document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+      event.target.classList.add("active");
+      document.getElementById("snippetCode").textContent = snippets[type];
+    }
+
+    // Initial load
+    switchSnippet('curl');
+    fetchHistory();
+    // Auto-refresh history every 5s
+    setInterval(fetchHistory, 5000);
+  </script>
+</body>
+</html>
