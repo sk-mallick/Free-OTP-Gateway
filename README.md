@@ -15,7 +15,7 @@
   <img src="https://img.shields.io/badge/Language-Kotlin%202.0-1E1E1E?style=flat-square&logo=kotlin&logoColor=A78BFA" />
   <img src="https://img.shields.io/badge/UI-Dark%20Material%203-2563EB?style=flat-square" />
   <img src="https://img.shields.io/badge/License-MIT-1E1E1E?style=flat-square" />
-  <img src="https://img.shields.io/badge/Version-1.5-2563EB?style=flat-square" />
+  <img src="https://img.shields.io/badge/Version-1.6-2563EB?style=flat-square" />
 </p>
 
 ---
@@ -59,7 +59,7 @@
 ## 🚀 Quick Download & Install
 
 1. Download the latest compiled release:
-   👉 **[Download Free-OTP-Gateway.apk](release/Free-OTP-Gateway.apk)** (or [Free-OTP-Gateway-v1.5.apk](release/Free-OTP-Gateway-v1.5.apk))
+   👉 **[Download Free-OTP-Gateway.apk](release/Free-OTP-Gateway.apk)** (or [Free-OTP-Gateway-v1.6.apk](release/Free-OTP-Gateway-v1.6.apk))
 2. Transfer or download the APK to your Android device and tap **Install**.
 3. Launch **Free OTP Gateway** and grant SMS permissions.
 
